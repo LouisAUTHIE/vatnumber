@@ -35,7 +35,7 @@ class VatNumber extends TaxManagerModule
 		$this->name = 'vatnumber';
 		$this->tab = 'billing_invoicing';
 		$this->version = '2.1.1';
-		$this->author = 'PrestaShop';
+		$this->author = 'Friends of Presta';
 		$this->need_instance = 0;
 
 		$this->tax_manager_class = 'VATNumberTaxManager';
