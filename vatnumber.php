@@ -33,7 +33,7 @@ class VatNumber extends TaxManagerModule
 	{
 		$this->name = 'vatnumber';
 		$this->tab = 'billing_invoicing';
-		$this->version = '2.1.0';
+		$this->version = '2.1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -56,7 +56,8 @@ class VatNumber extends TaxManagerModule
 		return
 		    parent::install()
 		    && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1)
-		    && $this->registerHook('actionValidateCustomerAddressForm');
+		    && $this->registerHook('actionValidateCustomerAddressForm')
+		    && $this->registerHook('actionTaxManager');
 	}
 
 	public function uninstall()
@@ -66,14 +67,12 @@ class VatNumber extends TaxManagerModule
 
 	public function enable($force_all = false)
 	{
-		parent::enable($force_all);
-		Configuration::updateValue('VATNUMBER_MANAGEMENT', 1);
+		return parent::enable($force_all) && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1);
 	}
 
 	public function disable($force_all = false)
 	{
-		parent::disable($force_all);
-		Configuration::updateValue('VATNUMBER_MANAGEMENT', 0);
+		return parent::disable($force_all) && Configuration::updateValue('VATNUMBER_MANAGEMENT', 0);
 	}
 
 	public static function getPrefixIntracomVAT()
