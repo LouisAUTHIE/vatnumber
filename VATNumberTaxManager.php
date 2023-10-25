@@ -26,48 +26,48 @@
 
 class VATNumberTaxManager implements TaxManagerInterface
 {
-	public static function isAvailableForThisAddress(Address $address)
-	{
-		/*
-		HOTFIX
-		
-		For some reason, this check is called 6 times (?)
+    public static function isAvailableForThisAddress(Address $address)
+    {
+        /*
+        HOTFIX
 
-		1 w. the real address
-		2 w.o. the real address
+        For some reason, this check is called 6 times (?)
 
-		1 w. the real address
-		2 w.o. the real address
+        1 w. the real address
+        2 w.o. the real address
 
-		=> [1 0 0 1 0 0]
+        1 w. the real address
+        2 w.o. the real address
 
-		So we need to filter out the weird calls...
+        => [1 0 0 1 0 0]
 
-		We do this by caching the correct calls between calls;
-		by creating a static variable, which we save the address to,
-		if it does not contain NULL in some of the other fields.
-		*/
+        So we need to filter out the weird calls...
 
-		static $cached_address = NULL;
+        We do this by caching the correct calls between calls;
+        by creating a static variable, which we save the address to,
+        if it does not contain NULL in some of the other fields.
+        */
 
-		if ($address->id_customer != NULL) {
-			$cached_address = $address;
-		}
+        static $cached_address = null;
 
-		// Now, check on the cached address object
-		return (!empty($cached_address->vat_number)
-		    && !empty($cached_address->id_country)
-		    && $cached_address->id_country != Configuration::get('VATNUMBER_COUNTRY')
-		    && Configuration::get('VATNUMBER_MANAGEMENT')
-		);
-	}
+        if ($address->id_customer != null) {
+            $cached_address = $address;
+        }
 
-	public function getTaxCalculator()
-	{
-		// If the address matches the european vat number criterias no taxes are applied
-		$tax = new Tax();
-		$tax->rate = 0;
+        // Now, check on the cached address object
+        return !empty($cached_address->vat_number)
+            && !empty($cached_address->id_country)
+            && $cached_address->id_country != Configuration::get('VATNUMBER_COUNTRY')
+            && Configuration::get('VATNUMBER_MANAGEMENT')
+        ;
+    }
 
-		return new TaxCalculator(array($tax));
-	}
+    public function getTaxCalculator()
+    {
+        // If the address matches the european vat number criterias no taxes are applied
+        $tax = new Tax();
+        $tax->rate = 0;
+
+        return new TaxCalculator([$tax]);
+    }
 }
