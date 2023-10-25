@@ -19,6 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
+*  @author Friends of Presta <infos@friendsofpresta.org>
 *  @copyright  2007-2017 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -33,8 +34,8 @@ class VatNumber extends TaxManagerModule
 	{
 		$this->name = 'vatnumber';
 		$this->tab = 'billing_invoicing';
-		$this->version = '2.1.0';
-		$this->author = 'PrestaShop';
+		$this->version = '2.1.1';
+		$this->author = 'Friends of Presta';
 		$this->need_instance = 0;
 
 		$this->tax_manager_class = 'VATNumberTaxManager';
@@ -56,7 +57,8 @@ class VatNumber extends TaxManagerModule
 		return
 		    parent::install()
 		    && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1)
-		    && $this->registerHook('actionValidateCustomerAddressForm');
+		    && $this->registerHook('actionValidateCustomerAddressForm')
+		    && $this->registerHook('actionTaxManager');
 	}
 
 	public function uninstall()
@@ -66,14 +68,12 @@ class VatNumber extends TaxManagerModule
 
 	public function enable($force_all = false)
 	{
-		parent::enable($force_all);
-		Configuration::updateValue('VATNUMBER_MANAGEMENT', 1);
+		return parent::enable($force_all) && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1);
 	}
 
 	public function disable($force_all = false)
 	{
-		parent::disable($force_all);
-		Configuration::updateValue('VATNUMBER_MANAGEMENT', 0);
+		return parent::disable($force_all) && Configuration::updateValue('VATNUMBER_MANAGEMENT', 0);
 	}
 
 	public static function getPrefixIntracomVAT()
